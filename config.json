@@ -1,0 +1,18 @@
+{
+    "notations":{
+        "brackets":{
+            "open" : "(",
+            "close" : ")"
+        },
+        "unary":{
+            "not" : "!"
+        },
+        "binary":{
+            "" : "",
+            "or" : "|",
+            "and" : "&",
+            "implies" : "@",
+            "equals" : "="
+        }
+    }
+}

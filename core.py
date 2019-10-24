@@ -2,6 +2,7 @@ from node import Node
 from wffparser import Parser
 from syntax import Syntax
 
+
 class Core():
 
     input_phrase = ""
@@ -32,5 +33,3 @@ class Core():
         if(self.syntax.root == None):
             self.parse()
         return self.syntax.evaluate()
-
-    

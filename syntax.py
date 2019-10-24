@@ -1,4 +1,6 @@
 from node import Node
+
+
 class Syntax():
 
     def __init__(self, config):
@@ -12,7 +14,8 @@ class Syntax():
         rez = ""
         for child in root.childs:
             if(child.info in self.config["notations"]["binary"]):
-                rez += self.recon(child) + child.info + self.recon(root.childs[1])
+                rez += self.recon(child) + child.info + \
+                    self.recon(root.childs[1])
             elif(child.info in self.config["notations"]["unary"]):
                 rez += child.info + self.recon(child)
             else:
@@ -25,15 +28,15 @@ class Syntax():
 
     def evaluate_childs(self, child):
         if (child.info in self.config["notations"]["binary"]) and \
-            len(child.childs != 2):
+                len(child.childs != 2):
             return False
         if child.info in self.config["notations"]["unary"] and \
-            len(child.childs != 1):
+                len(child.childs != 1):
             return False
         elif len(child.childs) != 0:
             return False
         return True
-    
+
     def eval(self, root):
         for child in root.childs:
             if(self.evaluate_childs(child)):
@@ -44,7 +47,7 @@ class Syntax():
         return True
 
     def evaluate(self):
-        return self.eval(self.root)            
+        return self.eval(self.root)
 
     def validate(self):
         import re

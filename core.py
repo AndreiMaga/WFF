@@ -29,7 +29,7 @@ class Core():
             self.parse()
         return self.syntax.validate()
 
-    def evaluate(self):
+    def check_syntax(self):
         if(self.syntax.root == None):
             self.parse()
-        return self.syntax.evaluate()
+        return self.syntax.check_syntax()

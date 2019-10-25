@@ -26,7 +26,7 @@ class Syntax():
     def reconstruct(self):
         return self.recon(self.root)
 
-    def evaluate_childs(self, child):
+    def check_childs(self, child):
         if (child.info in self.config["notations"]["binary"]) and \
                 len(child.childs != 2):
             return False
@@ -37,17 +37,17 @@ class Syntax():
             return False
         return True
 
-    def eval(self, root):
+    def check(self, root):
         for child in root.childs:
-            if(self.evaluate_childs(child)):
-                return self.eval(child)
+            if(self.check_childs(child)):
+                return self.check(child)
             else:
                 print("Failed at child ", child.to_string())
                 return False
         return True
 
-    def evaluate(self):
-        return self.eval(self.root)
+    def check_syntax(self):
+        return self.check(self.root)
 
     def validate(self):
         import re

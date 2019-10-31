@@ -6,6 +6,7 @@ class Evaluator():
         self.config = config
         self.eval_config = eval_config
         self.was_set = False
+        self.results = []
 
     def setValues(self, root:Node):
         if(len(root.childs) == 0):
@@ -22,19 +23,25 @@ class Evaluator():
         if(len(root.childs) == 2):
             if(root.info == self.config["notations"]["binary"]["and"]):
                 rez = self.evaluate(root.childs[0]) and self.evaluate(root.childs[1])
+                self.results.append(rez)
                 return rez
             if(root.info == self.config["notations"]["binary"]["or"]):
                 rez = self.evaluate(root.childs[0]) or self.evaluate(root.childs[1])
+                self.results.append(rez)
                 return rez
             if(root.info == self.config["notations"]["binary"]["equals"]):
                 rez = self.evaluate(root.childs[0]) == self.evaluate(root.childs[1])
+                self.results.append(rez)
                 return rez
             if(root.info == self.config["notations"]["binary"]["implies"]):
                 rez = self.implies(self.evaluate(root.childs[0]),self.evaluate(root.childs[1]))
+                self.results.append(rez)
                 return rez
         elif(len(root.childs) == 1):
             if(root.info == self.config["notations"]["unary"]["not"]):
-                return not self.evaluate(root.childs[0])
+                rez = not self.evaluate(root.childs[0])
+                self.results.append(rez)
+                return rez
         else:
             return root.atom()
     def implies(self, a:bool,b:bool):

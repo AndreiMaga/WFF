@@ -17,7 +17,17 @@ class Core():
         self.parser = Parser(input_phrase, self.config)
         self.evaluator = Evaluator(self.eval_config, self.config)
 
-    def createEvaluator(self, config:dict):
+    def update_evaluator(self, config:dict):
+        for k in config:
+            v = config[k]
+            if(v == "True"):
+                config[k] = True
+            elif(v == "False"):
+                config[k] = False
+            else:
+                from utils import fail
+                fail("config", (k,v))
+            
         self.evaluator.eval_config = config
 
 
@@ -27,37 +37,51 @@ class Core():
             self.config = load(f)
 
     def parse(self):
+        self.syntax.validate(self.input_phrase)
         self.parser.parse()
         self.syntax.set_root(self.parser.root)
 
     def validate(self):
         if(self.syntax.root == None):
             self.parse()
-        return self.syntax.validate()
+        ret = self.syntax.validate(self.input_phrase)
+        self.evaluator.eval_config = {i : False for i in self.syntax.atom_list}
+        return ret
 
     def check_syntax(self):
         if(self.syntax.root == None):
             self.parse()
         return self.syntax.check_syntax()
 
-    def reconstruct(self):
+    def reconstruct(self,):
         if(self.syntax.root == None):
             self.parse()
         return self.syntax.reconstruct()
 
-    def evaluate(self):
+    def evaluate(self, p = False):
         if(self.syntax.root == None):
             self.parse()
         if(self.evaluator.was_set == False):
             self.evaluator.setValues(self.syntax.root)
-        return self.evaluator.evaluate(self.syntax.root)
+
+        rez = self.evaluator.evaluate(self.syntax.root)
+        if p == True:
+            from prettytable import PrettyTable
+            self.reconstruct()
+            table = PrettyTable([k for k in self.evaluator.eval_config.keys()] + self.syntax.operations)
+            table.add_row([k for k in self.evaluator.eval_config.values()] + self.evaluator.results)
+            print(str(table))
+        return rez
 
     def evaluate_all_interpretations(self):
-        if(self.syntax.root == None):
-            self.parse()
+        if(len(self.evaluator.eval_config) == 0):
+            self.validate()
+            
         p = 2 ** len(self.evaluator.eval_config.keys()) - 1 # number of bits we need
         lbits = len(bin(p).split("b")[1])
-        rez = []
+        from prettytable import PrettyTable
+        self.reconstruct()
+        rez = PrettyTable([k for k in self.evaluator.eval_config.keys()] + self.syntax.operations)
         while p != -1:
             bits = [int(c) for c in bin(p).split("b")[1]]
             while( len(bits) < lbits):
@@ -69,8 +93,14 @@ class Core():
                 l.append(bool(bits[i]))
                 i += 1
             self.evaluator.was_set = False
-            rez.append((l,self.evaluate()))
+            r = [self.evaluate()]
+            rez.add_row(l + self.evaluator.results)
+            self.evaluator.results = []
             p -= 1
-        return rez
+        print(str(rez))
 
-        
+    def print_tree(self):
+        if(self.syntax.root == None):
+            self.parse()
+        from pptree import print_tree
+        print_tree(self.syntax.root, childattr='childs', nameattr='info')

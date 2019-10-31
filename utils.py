@@ -17,4 +17,10 @@ def fail(type:str="", args:tuple=()):
 
         if type == "404":
             print("The atom "+ args[0] +" was not found in the config.")
+        if type == "val":
+            for i in args[0]:
+                if i not in args[1]:
+                    print("The symbol",i, " is not supported.")
+        if type == "config":
+            print("Unrecognised value",args[1],"at", args[0])
         raise SystemExit(1)

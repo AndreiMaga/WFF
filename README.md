@@ -5,7 +5,7 @@
 
 ### First example
 
-```py main.py -i "(((P&R)|Q)@S)" -e True -c {\"P\":\"True\",\"R\":\"True\",\"Q\":\"True\",\"S\":\"False\"}```
+```py main.py -i "(((P&R)|Q)@S)" -e -c {\"P\":\"True\",\"R\":\"True\",\"Q\":\"True\",\"S\":\"False\"}```
 
 should output
 
@@ -18,7 +18,7 @@ should output
 ```
 
 ### Second example
-```py main.py -i "((P&R)|Q)" -e True```
+```py main.py -i "((P&R)|Q)" -e```
 
 ```txt
 +-------+-------+-------+-------+-----------+

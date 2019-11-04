@@ -40,6 +40,7 @@ class Manager():
         self.syntax.validate(self.input_phrase)
         self.parser.parse()
         self.syntax.set_root(self.parser.root)
+        self.root = self.parser.root
 
     def validate(self):
         if(self.syntax.root == None):

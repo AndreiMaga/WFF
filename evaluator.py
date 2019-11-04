@@ -22,7 +22,9 @@ class Evaluator():
     def evaluate(self, root:Node):
         if(len(root.childs) == 2):
             if(root.info == self.config["notations"]["binary"]["and"]):
-                rez = self.evaluate(root.childs[0]) and self.evaluate(root.childs[1])
+                r1 = self.evaluate(root.childs[0])
+                r2 = self.evaluate(root.childs[1])
+                rez = r1 and r2
                 self.results.append(rez)
                 return rez
             if(root.info == self.config["notations"]["binary"]["or"]):

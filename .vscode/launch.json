@@ -9,7 +9,7 @@
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}\\main.py",
-            "args": ["-i \"(((P&R)|Q)@S)\"", "-e True","-c\"{\"P\":\"True\",\"R\":\"True\",\"Q\":\"True\",\"S\":\"False\"}\""],
+            "args": ["-i \"(((P&R)|Q)@S)\"", "-e"],
             "console": "integratedTerminal"
         },
         {

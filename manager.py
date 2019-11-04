@@ -3,7 +3,7 @@ from wffparser import Parser
 from syntax import Syntax
 from evaluator import Evaluator
 
-class Core():
+class Manager():
 
     input_phrase = ""
     config = {}

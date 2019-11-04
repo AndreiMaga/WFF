@@ -1,18 +1,6 @@
-from core import Core
+from manager import Manager
 from json import loads
 import argparse
-
-
-def str2bool(v):
-    if isinstance(v, bool):
-       return v
-    if v.lower() in ('yes', 'true', 't', 'y', '1'):
-        return True
-    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
-        return False
-    else:
-        raise argparse.ArgumentTypeError('Boolean value expected.')
-
 
 parser = argparse.ArgumentParser("Well-formatted formulas checker")
 
@@ -38,32 +26,32 @@ def __init__():
 
     args.i = args.i.strip()
     # i
-    c = Core(args.i)
+    m = Manager(args.i)
 
     # p
     if args.p == True:
-        c.parse()
+        m.parse()
 
     # s
     if args.s == True:
-        c.validate()
-        c.check_syntax()
+        m.validate()
+        m.check_syntax()
 
     # e
     if args.e == True:
         # c
         if args.c != None:
-            c.update_evaluator(args.c)
-            c.evaluate(p=True)
+            m.update_evaluator(args.c)
+            m.evaluate(p=True)
         else:
-            c.evaluate_all_interpretations()
+            m.evaluate_all_interpretations()
 
     # v
     if args.v == True:
-        c.print_tree()
+        m.print_tree()
 
     if args.r == True:
-        print(c.reconstruct())
+        print(m.reconstruct())
 
 
 if __name__ == "__main__":

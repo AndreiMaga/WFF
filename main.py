@@ -50,6 +50,7 @@ def __init__():
     if args.t == True:
         m.print_tree()
 
+    # r
     if args.r == True:
         print(m.reconstruct())
 

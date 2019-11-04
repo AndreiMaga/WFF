@@ -18,7 +18,7 @@ class Parser():
         self.input_phrase = input_phrase
         self.root = Node()
         self.config = config
-        self.expected_depth = 0
+        self.expected_depth = (0,)
 
     def parse(self):
         """The parse method, this should be called from outside the class
@@ -61,10 +61,10 @@ class Parser():
         Arguments:
             root {Node} -- The starting node
         """
-        if(self.expected_depth == 0):
+        if(self.expected_depth[0] == 0):
             self.get_expected_depth(self.input_phrase)
         ch = self.check_depth_rec(root, 1)
-        if(ch != self.expected_depth or root.childs[0].info == ""):
+        if(ch != self.expected_depth[0] or 0 != self.expected_depth[1] or root.childs[0].info == ""):
             fail("ret", (-1, ))
 
     def get_expected_depth(self, input_phrase: str):
@@ -73,16 +73,21 @@ class Parser():
         Arguments:
             input_phrase {str} -- The input string
         """
-        max_par = 0
-        cur_par = 0
+        max_par_open = 0
+        cur_par_open = 0
+        max_par_close = 0
+        cur_par_close = 0
         for c in input_phrase:
             if(c is self.config["notations"]["brackets"]["open"]):
-                cur_par += 1
+                cur_par_open += 1
+                cur_par_close -= 1
             elif(c is self.config["notations"]["brackets"]["close"]):
-                cur_par -= 1
-            max_par = max(max_par, cur_par)
+                cur_par_open -= 1
+                cur_par_close += 1
+            max_par_open = max(max_par_open, cur_par_open)
+            max_par_close = max(max_par_close, cur_par_close)
 
-        self.expected_depth = max_par + 1
+        self.expected_depth = (max_par_open + 1, max_par_close)
 
     def parser(self, input_phrase, root: Node = None, p: int = 0):
         """The parser method, it parses the input_phrase and stores the output in root
@@ -93,11 +98,12 @@ class Parser():
             p {int} -- The current position (default: {0})
         """
         if len(input_phrase) == 1:
-            if input_phrase == ")":
-                """Last character should be ) or else, fail
-                """
-                self.check_depth(self.root)
-                return
+            if root.parent != '':
+                if input_phrase == ")" and root.parent.info == '':
+                    """Last character should be ) and parent should be ''
+                    """
+                    self.check_depth(self.root)
+                    return
             fail("ret", (p, ))
         ch = 0
         if(len(root.childs) == 0):
@@ -109,42 +115,39 @@ class Parser():
             """Change to the second child if the first one is filled
             """
             ch = 1
-        try:
-            if(input_phrase[0] == self.config["notations"]["brackets"]["open"]):
-                """ If it's an open bracket, go to the child of root
-                """
-                self.parser(input_phrase[1:], root.childs[ch], p + 1)
+        if(input_phrase[0] == self.config["notations"]["brackets"]["open"]):
+            """ If it's an open bracket, go to the child of root
+            """
+            self.parser(input_phrase[1:], root.childs[ch], p + 1)
 
-            elif(input_phrase[0] in self.config["notations"]["binary"].values()):
-                """This should be hit only when a binary relation is hit
-                Set the root info to the sign, add a new node for the second 
-                atom, and continue
-                """
-                root.set_info(input_phrase[0])
-                self.add_node(root, ch)
-                self.parser(input_phrase[1:], root, p + 1)
+        elif(input_phrase[0] in self.config["notations"]["binary"].values()):
+            """This should be hit only when a binary relation is hit
+            Set the root info to the sign, add a new node for the second 
+            atom, and continue
+            """
+            root.set_info(input_phrase[0])
+            self.add_node(root, ch)
+            self.parser(input_phrase[1:], root, p + 1)
 
-            elif(input_phrase[0] in self.config["notations"]["unary"].values()):
-                """This should be hit only when a negation is hit
-                Set the root to the negation sign and continue
-                """
-                root.set_info(input_phrase[0])
-                self.parser(input_phrase[1:], root, p + 1)
+        elif(input_phrase[0] in self.config["notations"]["unary"].values()):
+            """This should be hit only when a negation is hit
+            Set the root to the negation sign and continue
+            """
+            root.set_info(input_phrase[0])
+            self.parser(input_phrase[1:], root, p + 1)
 
-            elif(input_phrase[0] == self.config["notations"]["brackets"]["close"]):
-                """If the character is an closed bracket, jump back with the root
+        elif(input_phrase[0] == self.config["notations"]["brackets"]["close"]):
+            """If the character is an closed bracket, jump back with the root
+            """
+            if(root.parent.info in self.config["notations"]["unary"].values()):
+                """If it's negation, jump twice
                 """
-                if(root.parent.info in self.config["notations"]["unary"].values()):
-                    """If it's negation, jump twice
-                    """
-                    self.parser(input_phrase[1:], root.parent.parent, p + 1)
-                else:
-                    self.parser(input_phrase[1:], root.parent, p + 1)
-
+                self.parser(input_phrase[1:], root.parent.parent, p + 1)
             else:
-                """This should be hit only when it's an atom
-                """
-                root.childs[ch].info = input_phrase[0]
-                self.parser(input_phrase[1:], root, p + 1)
-        except:
-            fail("parse", (p,))
+                self.parser(input_phrase[1:], root.parent, p + 1)
+
+        else:
+            """This should be hit only when it's an atom
+            """
+            root.childs[ch].info = input_phrase[0]
+            self.parser(input_phrase[1:], root, p + 1)

@@ -64,7 +64,7 @@ class Parser():
         if(self.expected_depth == 0):
             self.get_expected_depth(self.input_phrase)
         ch = self.check_depth_rec(root, 1)
-        if(ch != self.expected_depth):
+        if(ch != self.expected_depth or root.childs[0].info == ""):
             fail("ret", (-1, ))
 
     def get_expected_depth(self, input_phrase: str):

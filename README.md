@@ -6,16 +6,16 @@ A tool for checking syntax and creating truth tables for well-formated formulas.
 
 ```py main.py -i <input> -<actions>```
 
-```<input>``` should be a in the strict type of writing (for each operation, there needs to be a pair of parentheses )
+```<input>``` should be a in the strict type of writing (for each operation, there needs to be a pair of parentheses ).
 
 List of available actions
 
-p - Will parse the input (this will run by default with any other action).
-s - Will check the syntax.
-e - Will evaluate all the possible interpretations. See [second example](#second-example).
-c - In conjunction with ```e``` will run only 1 interpretation passed as an argument with a dictionary. See [first example](#first-example).
-t - Will print the tree. See [third example](#third-example).
-r - Will print the reconstructed tree (as a formula).
+p - Will parse the input (this will run by default with any other action).  
+s - Will check the syntax.  
+e - Will evaluate all the possible interpretations. See [second example](#second-example).  
+c - In conjunction with ```e``` will run only 1 interpretation passed as an argument with a dictionary. See [first example](#first-example).  
+t - Will print the tree. See [third example](#third-example).  
+r - Will print the reconstructed tree (as a formula).  
 
 ## Example
 

@@ -41,36 +41,42 @@ class Manager():
         self.parser.parse()
         self.syntax.set_root(self.parser.root)
         self.root = self.parser.root
+        print("Parser: ✔️")
 
     def validate(self):
-        if(self.syntax.root == None):
-            self.parse()
         ret = self.syntax.validate(self.input_phrase)
         self.evaluator.eval_config = {i : False for i in self.syntax.atom_list}
+        print("Symbols: ✔️")
         return ret
 
     def check_syntax(self):
         if(self.syntax.root == None):
             self.parse()
-        return self.syntax.check_syntax()
+        rez = self.syntax.check_syntax()
+        print("Syntax: ✔️")
+        return rez
 
     def reconstruct(self,):
         if(self.syntax.root == None):
             self.parse()
         return self.syntax.reconstruct()
 
-    def evaluate(self, p = False):
+    def evaluate(self, standalone = False):
         if(self.syntax.root == None):
             self.parse()
+        
         if(self.evaluator.was_set == False):
             self.evaluator.setValues(self.syntax.root)
 
         rez = self.evaluator.evaluate(self.syntax.root)
-        if p == True:
+        if standalone == True:
+            self.validate()
+            self.check_syntax()
             from prettytable import PrettyTable
             self.reconstruct()
             table = PrettyTable([k for k in self.evaluator.eval_config.keys()] + self.syntax.operations)
             table.add_row([k for k in self.evaluator.eval_config.values()] + self.evaluator.results)
+            print("Evaluation: ✔️")
             print(str(table))
         return rez
 
@@ -82,6 +88,7 @@ class Manager():
         lbits = len(bin(p).split("b")[1])
         from prettytable import PrettyTable
         self.reconstruct()
+        self.check_syntax()
         rez = PrettyTable([k for k in self.evaluator.eval_config.keys()] + self.syntax.operations)
         while p != -1:
             bits = [int(c) for c in bin(p).split("b")[1]]
@@ -94,10 +101,11 @@ class Manager():
                 l.append(bool(bits[i]))
                 i += 1
             self.evaluator.was_set = False
-            r = [self.evaluate()]
+            self.evaluate()
             rez.add_row(l + self.evaluator.results)
             self.evaluator.results = []
             p -= 1
+        print("Evaluation: ✔️")
         print(str(rez))
 
     def print_tree(self):

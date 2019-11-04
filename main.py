@@ -14,7 +14,7 @@ parser.add_argument('-e', dest='e', action="store_true", required=False,
                     help="Will evaluate the input with the provided config, if it's missing will evaluate all interpretations.")
 parser.add_argument('-c', metavar='c', required=False, type=loads,
                     help="The config for one evaluation. The format is {\\\"P\\\": \\\"False\\\", \\\"Q\\\": \\\"True\\\"}.")
-parser.add_argument('-v', dest='v', action="store_true",
+parser.add_argument('-t', dest='t', action="store_true",
                     required=False,   help="Will print the tree.")
 parser.add_argument('-r', dest='r', action="store_true", required=False,
                     help="Will print the reconstructed version of the input.")
@@ -42,12 +42,12 @@ def __init__():
         # c
         if args.c != None:
             m.update_evaluator(args.c)
-            m.evaluate(p=True)
+            m.evaluate(True)
         else:
             m.evaluate_all_interpretations()
 
-    # v
-    if args.v == True:
+    # t
+    if args.t == True:
         m.print_tree()
 
     if args.r == True:

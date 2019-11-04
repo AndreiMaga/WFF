@@ -23,8 +23,6 @@ r - Will print the reconstructed tree (as a formula).
 
 ```py main.py -i "(((P&R)|Q)@S)" -e -c {\"P\":\"True\",\"R\":\"True\",\"Q\":\"True\",\"S\":\"False\"}```
 
-should output
-
 ```txt
 +------+------+------+-------+-------+-----------+---------------+
 |  P   |  R   |  Q   |   S   | (P&R) | ((P&R)|Q) | (((P&R)|Q)@S) |

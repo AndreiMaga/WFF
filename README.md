@@ -16,6 +16,7 @@ e - Will evaluate all the possible interpretations. See [second example](#second
 c - In conjunction with ```e``` will run only 1 interpretation passed as an argument with a dictionary. See [first example](#first-example).  
 t - Will print the tree. See [third example](#third-example).  
 r - Will print the reconstructed tree (as a formula).  
+o - Will output the evaluation to a file.  
 
 ## Example
 

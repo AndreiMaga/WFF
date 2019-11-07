@@ -2,6 +2,9 @@
 
 A tool for checking syntax and creating truth tables for well-formated formulas.
 
+## Info
+It was written and tested in **Python 3.7.4**.  
+
 ## Usage
 
 ```py main.py -i <input> -<actions>```

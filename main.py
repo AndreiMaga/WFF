@@ -19,6 +19,9 @@ parser.add_argument('-t', dest='t', action="store_true",
 parser.add_argument('-r', dest='r', action="store_true", required=False,
                     help="Will print the reconstructed version of the input.")
 
+parser.add_argument('-o', dest='o', required=False, type=str,
+                    help="Will output to this file if specified, but it will also print to console. It works only for evaluation.")
+
 args = parser.parse_args()
 
 
@@ -31,6 +34,8 @@ def __init__():
     # p
     if args.p == True:
         m.parse()
+
+    
 
     # s
     if args.s == True:
@@ -54,6 +59,9 @@ def __init__():
     if args.r == True:
         print(m.reconstruct())
 
+    if args.o != None:
+        with open(args.o, "w", encoding="utf-8") as f:
+            f.write(m.output)
 
 if __name__ == "__main__":
     __init__()

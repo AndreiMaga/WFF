@@ -5,7 +5,6 @@ from evaluator import Evaluator
 
 class Manager():
 
-    input_phrase = ""
     config = {}
     eval_config = {}
 
@@ -16,6 +15,7 @@ class Manager():
         self.syntax = Syntax(self.config)
         self.parser = Parser(input_phrase, self.config)
         self.evaluator = Evaluator(self.eval_config, self.config)
+        self.output = ""
 
     def update_evaluator(self, config:dict):
         for k in config:
@@ -41,19 +41,25 @@ class Manager():
         self.parser.parse()
         self.syntax.set_root(self.parser.root)
         self.root = self.parser.root
-        print("Parser: ✔️")
+        out = "Parser: ✔️"
+        self.output += out + "\n"
+        print(out)
 
     def validate(self):
         ret = self.syntax.validate(self.input_phrase)
         self.evaluator.eval_config = {i : False for i in self.syntax.atom_list}
-        print("Symbols: ✔️")
+        out = "Symbols: ✔️"
+        self.output += out + "\n"
+        print(out)
         return ret
 
     def check_syntax(self):
         if(self.syntax.root == None):
             self.parse()
         rez = self.syntax.check_syntax()
-        print("Syntax: ✔️")
+        out = "Syntax: ✔️"
+        self.output += out + "\n"
+        print(out)
         return rez
 
     def reconstruct(self,):
@@ -76,8 +82,10 @@ class Manager():
             self.reconstruct()
             table = PrettyTable([k for k in self.evaluator.eval_config.keys()] + self.syntax.operations)
             table.add_row([k for k in self.evaluator.eval_config.values()] + self.evaluator.results)
-            print("Evaluation: ✔️")
-            print(str(table))
+            out = "Evaluation: ✔️" +"\n"
+            out += str(table)
+            self.output += out
+            print(out)
         return rez
 
     def evaluate_all_interpretations(self):
@@ -105,8 +113,10 @@ class Manager():
             rez.add_row(l + self.evaluator.results)
             self.evaluator.results = []
             p -= 1
-        print("Evaluation: ✔️")
-        print(str(rez))
+        out = "Evaluation: ✔️" +"\n"
+        out += str(rez)
+        self.output += out
+        print(out)
 
     def print_tree(self):
         if(self.syntax.root == None):

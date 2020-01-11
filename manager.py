@@ -88,7 +88,7 @@ class Manager():
             print(out)
         return rez
 
-    def evaluate_all_interpretations(self):
+    def evaluate_all_interpretations(self, pr = True):
         if(len(self.evaluator.eval_config) == 0):
             self.validate()
             
@@ -114,9 +114,35 @@ class Manager():
             self.evaluator.results = []
             p -= 1
         out = "Evaluation: ✔️" +"\n"
-        out += str(rez)
+        if pr:
+            out += str(rez)
         self.output += out
         print(out)
+        return rez
+
+    def sat_not_sat(self, pr= False):
+        rez = self.evaluate_all_interpretations(pr)
+        r = []
+        for row in rez._rows:
+            r.append(row[-1]) # get the last item
+        ok = False
+
+        out = "Is "
+        if(all(r)):
+            out += "Valid"
+        else:
+            for i in r:
+                if i == True:
+                    ok = True
+            
+            if ok:
+                out += "Satisfiable"
+            else:
+                out += "Not satisfiable"
+        print(out)
+        self.output += out
+        
+
 
     def print_tree(self):
         if(self.syntax.root == None):

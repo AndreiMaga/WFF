@@ -18,10 +18,10 @@ parser.add_argument('-t', dest='t', action="store_true",
                     required=False,   help="Will print the tree.")
 parser.add_argument('-r', dest='r', action="store_true", required=False,
                     help="Will print the reconstructed version of the input.")
-
 parser.add_argument('-o', dest='o', required=False, type=str,
                     help="Will output to this file if specified, but it will also print to console. It works only for evaluation.")
-
+parser.add_argument('-k', dest='k',action="store_true", required=False,
+                    help="Will evaluate if the formula is Valid/Satisfiable/Not Satisfiable")
 args = parser.parse_args()
 
 
@@ -35,15 +35,17 @@ def __init__():
     if args.p == True:
         m.parse()
 
-    
-
     # s
     if args.s == True:
         m.validate()
         m.check_syntax()
 
-    # e
-    if args.e == True:
+    if args. k == True:
+        if args.e == True:
+            m.sat_not_sat(True)
+        else:
+            m.sat_not_sat()
+    elif args.e == True:
         # c
         if args.c != None:
             m.update_evaluator(args.c)
